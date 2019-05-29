@@ -3,6 +3,7 @@ import os
 import os.path
 import glob
 from discord.ext import commands as dcmd
+import json
 
 import inspect
 
@@ -76,20 +77,9 @@ async def play_sound(ctx, name):
         source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(fname))
         ctx.voice_client.play(source, after=lambda e: print('Player error: %s' % e) if e else None)
 
-
-
     except Exception as e:
         fmt = 'An error occurred while processing this request: ```py\n{}: {}\n```'
         await ctx.send(fmt.format(type(e).__name__, e))
-
-
-# @client.event
-# async def on_ready():
-#     print("files found: {}".format('\n'.join(commands)))
-#     print('Logged in as')
-#     print(client.user.name)
-#     print(client.user.id)
-#     print('------')
 
 @bot.event
 async def on_ready():
@@ -101,5 +91,9 @@ async def on_ready():
     print(bot.user.id)
     print('------')
 
-bot.run('NDYyMTUxOTIzMDA5NTg1MTgy.DhdsMQ.Uo1INjjLJq74iKDq5DGtFEuNec8')
 
+if __name__ == '__main__':
+    with open(os.path.join(get_mod_path(), 'config.json')) as jsonconfig:
+        config = json.load(jsonconfig)
+        token = config['token']
+    bot.run(token)
