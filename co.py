@@ -96,4 +96,6 @@ if __name__ == '__main__':
     with open(os.path.join(get_mod_path(), 'config.json')) as jsonconfig:
         config = json.load(jsonconfig)
         token = config['token']
+        if token == 'YOUR_TOKEN_HERE':
+            raise ValueError("You must set a token in config.json.")
     bot.run(token)
