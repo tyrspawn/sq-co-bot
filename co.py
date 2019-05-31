@@ -40,9 +40,12 @@ async def hello(ctx):
 async def play(ctx, sound_name=''):
     if sound_name == '':
         msg = 'You must specify a sound. It should be one of the following\n'
+        msg = '```\n'
         msg += '\n'.join(sounds)
+        msg += '```'
         await ctx.send(msg)
-    await play_sound(ctx, sound_name)
+    else:
+        await play_sound(ctx, sound_name)
 
 @bot.command(description="Join the given voice channel.")
 async def join(ctx, *, channel: discord.VoiceChannel):
@@ -52,30 +55,37 @@ async def join(ctx, *, channel: discord.VoiceChannel):
         try:
             await ctx.voice_client.move_to(channel)
         except dcmd.errors.BadArgument:
-            ctx.send(errmsg)
+            await ctx.send(errmsg)
     else:
         try:
             await channel.connect()
         except dcmd.errors.BadArgument:
-            ctx.send(errmsg)
+            await ctx.send(errmsg)
             
 
 @bot.command(description="Leave any connected voice channel.")
 async def leave(ctx):
-    await ctx.voice_client.disconnect()
+    try:
+        await ctx.voice_client.disconnect()
+    except AttributeError:
+        await ctx.send("I'm not in any voice channel on this server!")
 
 @bot.command(description="Stops any audio being played.")
 async def stop(ctx):
-    await ctx.voice_client.stop()
+    ctx.voice_client.stop()
 
 async def play_sound(ctx, name):
     try:
         fname = '.'.join([os.path.join(audiodir, name), 'ogg'])
         if not os.path.exists(fname):
-            ctx.send("```Can't find audio file '{}'```".format(name))
-
+            await ctx.send("```Can't find audio file '{}'```".format(name))
+            return
+        
         source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(fname))
-        ctx.voice_client.play(source, after=lambda e: print('Player error: %s' % e) if e else None)
+        try:
+            ctx.voice_client.play(source, after=lambda e: print('Player error: %s' % e) if e else None)
+        except AttributeError:
+            await ctx.send('I need to be in a voice channel to do that!')
 
     except Exception as e:
         fmt = 'An error occurred while processing this request: ```py\n{}: {}\n```'
@@ -86,6 +96,7 @@ async def on_ready():
     global sounds
     file_list = glob.glob('{}/*.ogg'.format(audiodir))
     sounds = [os.path.split(fname)[1][:-4] for fname in file_list]
+    sounds = sorted(sounds)
     print('Logged in as')
     print(bot.user.name)
     print(bot.user.id)
@@ -93,7 +104,15 @@ async def on_ready():
 
 
 if __name__ == '__main__':
-    with open(os.path.join(get_mod_path(), 'config.json')) as jsonconfig:
+    configfile = os.path.join(get_mod_path(), 'config.json')
+    if not os.path.exists(configfile):
+        print("Config file not found, please enter your auth token here:")
+        token = input('--> ')
+        token = token.strip()
+        with open(configfile, 'w') as jsonconfig:
+            json.dump({'token': token}, jsonconfig)
+
+    with open(configfile, 'r') as jsonconfig:
         config = json.load(jsonconfig)
         token = config['token']
         if token == 'YOUR_TOKEN_HERE':
