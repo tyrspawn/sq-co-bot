@@ -93,8 +93,11 @@ async def play_sound(ctx, name):
         if not os.path.exists(fname):
             await ctx.author.send(f"I don't know anything about ```{name}```")
             return
-        
-        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(fname))
+
+        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(
+            source=fname,
+            options="-af loudnorm"
+        ))
         try:
             ctx.voice_client.play(source, after=lambda e: print('Player error: %s' % e) if e else None)
         except AttributeError:
