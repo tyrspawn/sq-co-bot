@@ -96,7 +96,7 @@ async def play_sound(ctx, name):
 
         source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(
             source=fname,
-            options="-af loudnorm"
+            options="-af loudnorm=i=-15"
         ))
         try:
             ctx.voice_client.play(source, after=lambda e: print('Player error: %s' % e) if e else None)
