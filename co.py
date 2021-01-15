@@ -98,6 +98,11 @@ async def get_volume(fname):
     # Lol ffmpeg doesn't meaningfully split output JSON from other junk.
     return json.loads("{" + stderr.decode().strip().split("{")[-1])
 
+# Feed loudness measurements from the previous run into
+# the one that actually plays the sound.
+# Shoot for a (totally arbitrary; change me)
+# -15 "integrated loudness target" and 0dB true peak
+# https://ffmpeg.org/ffmpeg-filters.html#loudnorm
 def filter_settings(loudness):
     return
     "loudnorm=i=-15:tp=0:" +
