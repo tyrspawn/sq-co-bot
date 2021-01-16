@@ -5,7 +5,7 @@ c = Connection(
     user='cobotrobot', 
     port=22,
     connect_kwargs={
-        "key_filename": "/home/runner/.ssh/id_rsa.key",
+        "key_filename": "/home/runner/.ssh/id_rsa",
     },)
 result = c.run('uname -s')
 print (result)
