@@ -33,21 +33,11 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
-        
-    - name: AWS SSM Send-Command
-      uses: peterkimzz/aws-ssm-send-command@master
-      id: ssm
+    - name: ls -a via ssh
+      uses: garygrossgarten/github-action-ssh@release
       with:
-        aws-region: ${{ secrets.AWS_REGION }}
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        instance-ids: | 
-          i-0e1c7eb2023d0410e
-        
-        working-directory: /home/ubuntu/application
-        command: ls -al
-        comment: Hello world!
-
-    # Catch SSM outputs
-    - name: Get the outputs
-      run: echo "The Command id is ${{ steps.ssm.outputs.command-id }}"
+        command: ls -a
+        host: ${{ secrets.KNOWN_HOSTS }}
+        username: ${{ secrets.USERNAME }}
+        passphrase: ${{ secrets.PASSWORD }}
+        privateKey: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
