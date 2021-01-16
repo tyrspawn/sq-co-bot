@@ -40,4 +40,4 @@ jobs:
         name: id_rsa
         known_hosts: ${{ secrets.KNOWN_HOSTS }}
     - name: rsync over ssh
-      run: ssh -tt ${{ secrets.USERNAME }}@${{ secrets.KNOWN_HOSTS }}
+      run: ssh -tt -vvv ${{ secrets.USERNAME }}@${{ secrets.KNOWN_HOSTS }}
