@@ -39,5 +39,5 @@ jobs:
         command: ls -a
         host: ${{ secrets.KNOWN_HOSTS }}
         username: ${{ secrets.USERNAME }}
-        passphrase: ${{ secrets.PASSWORD }}
+        password: ${{ secrets.PASSWORD }}
         privateKey: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
