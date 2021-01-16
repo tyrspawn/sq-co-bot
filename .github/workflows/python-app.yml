@@ -35,18 +35,21 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
-    - name: Install SSH key
-      uses: shimataro/ssh-key-action@v2
+    
+    - uses: actions/checkout@v2
+    - name: AWS SSM Send-Command
+      uses: peterkimzz/aws-ssm-send-command@master
+      id: ssm
       with:
-        key: ${{ secrets.COBOTSSH }}
-        name: id_rsa # optional
-        known_hosts: ${{ secrets.KNOWN_HOSTS }}
-        config: ${{ secrets.CONFIG }} # ssh_config; optional
-    - name: executing remote ssh commands using ssh key
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.KNOWN_HOSTS }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.COBOTSSH }}
-        port: ${{ secrets.PORT }}
-        script: uname -s
+        aws-region: ${{ secrets.AWS_REGION }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        instance-ids: ${{ secrets.INSTANCE_ID }}
+
+        working-directory: /home/ubuntu/application
+        command: ls -al
+        comment: Hello world!
+
+    # Catch SSM outputs
+    - name: Get the outputs
+      run: echo "The Command id is ${{ steps.ssm.outputs.command-id }}"
