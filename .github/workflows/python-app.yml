@@ -43,15 +43,5 @@ jobs:
         known_hosts: ${{ secrets.KNOWN_HOSTS }}
         config: ${{ secrets.CONFIG }} # ssh_config; optional
     - name: Deploy to AWS
-      run: | 
-        import fabric
-        from fabric import Connection
-        c = Connection(
-            host='ec2-52-86-239-251.compute-1.amazonaws.com', 
-            user='cobotrobot', 
-            port=22,
-            connect_kwargs={
-                "key_filename": "/home/runner/.ssh/COBOTSSH.key",
-            },)
-        result = c.run('uname -s')
-        print (result)
+      run: |
+        python3 test.py
