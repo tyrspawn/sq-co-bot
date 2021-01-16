@@ -3,6 +3,7 @@ from fabric import Connection
 c = Connection(
     host='ec2-52-86-239-251.compute-1.amazonaws.com', 
     user='cobotrobot', 
+    password='balls',
     port=22,
     connect_kwargs={
         "key_filename": "/home/runner/.ssh/id_rsa",
