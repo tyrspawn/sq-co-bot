@@ -42,6 +42,11 @@ jobs:
         name: id_rsa # optional
         known_hosts: ${{ secrets.KNOWN_HOSTS }}
         config: ${{ secrets.CONFIG }} # ssh_config; optional
-    - name: Deploy to AWS
-      run: |
-        python3 test.py
+    - name: executing remote ssh commands using ssh key
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.KNOWN_HOSTS }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.COBOTSSH }}
+        port: ${{ secrets.PORT }}
+        script: uname -s
