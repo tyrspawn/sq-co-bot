@@ -44,4 +44,6 @@ jobs:
         config: ${{ secrets.CONFIG }} # ssh_config; optional
     - name: Deploy to AWS
       run: |
+        cd /home/runner/.ssh/
+        ls 
         python3 test.py
