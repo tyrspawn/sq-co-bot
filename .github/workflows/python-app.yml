@@ -33,11 +33,11 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
-    - name: ls -a via ssh
-      uses: garygrossgarten/github-action-ssh@release
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
       with:
-        command: ls -a
-        host: ${{ secrets.KNOWN_HOSTS }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        privateKey: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+        key: ${{ secrets.COBOTSSH }}
+        name: id_rsa
+        known_hosts: ${{ secrets.KNOWN_HOSTS }}
+    - name: rsync over ssh
+      run: ssh ${{ secrets.USERNAME }}@${{ secrets.KNOWN_HOSTS }}
