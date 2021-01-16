@@ -42,7 +42,8 @@ jobs:
         aws-region: ${{ secrets.AWS_REGION }}
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        instance-ids: i-0e1c7eb2023d0410e
+        instance-ids: | 
+          i-0e1c7eb2023d0410e
         
         working-directory: /home/ubuntu/application
         command: ls -al
