@@ -39,4 +39,13 @@ jobs:
         name: id_rsa
         known_hosts: ${{ secrets.KNOWN_HOSTS }}
     - name: rsync over ssh
-      run: ssh -tt -vvv -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.KNOWN_HOSTS }}
+    - run: |
+        ssh -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.KNOWN_HOSTS }}
+        echo "Trying to stop sqcobot service"
+        systemctl --user stop sqcobot.service
+        echo "Going go sq-co-bot dir"
+        cd /opt/sq-co-bot/
+        echo "Git pull in working dir"
+        git pull
+        echo "Trying to start sqcobot service"
+        systemctl --user start sqcobot.service
